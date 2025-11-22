@@ -64,7 +64,7 @@
 
 * #### 如下图：一键SSH命令生成器：[点击视频教程](https://youtu.be/4u6W4c-t3oU)
 
-<img width="824" height="891" alt="0e046335a428e07073d370db621e843d" src="https://github.com/user-attachments/assets/5a41163d-7724-4615-a5ed-70a31dd5940f" />
+<img width="1201" height="800" alt="729cda77f5d7f29dcbab7915ec50b087" src="https://github.com/user-attachments/assets/c2c8d8ea-6526-4628-9a8a-8a5153f04987" />
 
 ------------------------------------------------------------------
 
@@ -72,10 +72,11 @@
 
 <img width="869" height="602" alt="25d8af7b9b43d49d84ed84826600bebb" src="https://github.com/user-attachments/assets/739e4e86-8326-4c80-861d-5726c7f96481" />
 
+------------------------------------------------------------------
 
 * #### 如下图：从此抛弃第三方独立的WARP脚本，xray+singbox双内核集成15种WARP出站组合：[点击视频教程](https://youtu.be/iywjT8fIka4)
 
-<img width="1015" height="689" alt="11b1e7a415866a09612f4b559acf3b8e" src="https://github.com/user-attachments/assets/12a9b55c-550f-4a7b-b2af-4ff9b349c0ae" />
+<img width="1015" height="681" alt="e0b66a115b1cd6a5060c38cae6e45c55" src="https://github.com/user-attachments/assets/06e69e8e-f714-4ba5-a519-f09fdecb0bbf" />
 
 ----------------------------------------------------------
 
@@ -166,7 +167,7 @@ Vmess-ws-argo临时隧道CDN优选节点
 vmpt="" argo="vmpt" bash <(curl -Ls https://raw.githubusercontent.com/yonggekkk/argosbx/main/argosbx.sh)
 ```
 
-Vless-ws-vision-enc-Argo临时隧道CDN优选节点
+Vless-ws-vision-enc-argo临时隧道CDN优选节点
 ```
 vwpt="" argo="vwpt" bash <(curl -Ls https://raw.githubusercontent.com/yonggekkk/argosbx/main/argosbx.sh)
 ```
@@ -176,7 +177,7 @@ Vmess-ws-argo-argo固定隧道CDN优选节点，必须填写端口(vmpt)、域�
 vmpt="CF设置的URL端口" argo="vmpt" agn="解析的CF域名" agk="CF获取的token" bash <(curl -Ls https://raw.githubusercontent.com/yonggekkk/argosbx/main/argosbx.sh)
 ```
 
-Vless-ws-vision-enc-Argo固定隧道CDN优选节点，必须填写端口(vmpt)、域名(agn)、token(agk)
+Vless-ws-vision-enc-argo固定隧道CDN优选节点，必须填写端口(vmpt)、域名(agn)、token(agk)
 ```
 vwpt="CF设置的URL端口" argo="vwpt" agn="解析的CF域名" agk="CF获取的token" bash <(curl -Ls https://raw.githubusercontent.com/yonggekkk/argosbx/main/argosbx.sh)
 ```
@@ -197,9 +198,9 @@ vwpt="80系端口、指定回源端口" cdnym="CF解析IP的域名" bash <(curl 
 ```
 
 * #### 如下图：节点IP、端口被封依旧可用！套CDN优选4大方案：[点击视频教程](https://youtu.be/RnUT1CNbCr8)
-* #### 更新：CDN优选域名：yg1.ygkkk.dpdns.org (yg1中的1，可换为1-13中任意数字，甬哥维护)
+* #### 更新：CDN优选域名：yg1.ygkkk.dpdns.org (yg1中的1，可换为1-13中任意数字)
 
-<img width="1571" height="783" alt="248b3a88d128528374b06c557ccb8908" src="https://github.com/user-attachments/assets/a515e13e-5fb4-4f09-9cfc-8ce50a4cd97f" />
+<img width="1680" height="823" alt="bdeba707ad6843612a0c0a8fd8dade11" src="https://github.com/user-attachments/assets/fce5d3bd-3978-49b5-86b3-5e185e6183a6" />
 
 ---------------------------------------------------------
 

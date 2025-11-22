@@ -266,6 +266,10 @@ echo "$port_vx" > "$HOME/agsbx/port_vx"
 fi
 port_vx=$(cat "$HOME/agsbx/port_vx")
 echo "Vless-xhttp-enc端口：$port_vx"
+if [ -n "$cdnym" ]; then
+echo "$cdnym" > "$HOME/agsbx/cdnym"
+echo "80系CDN或者回源CDN的host域名 (确保IP已解析在CF域名)：$cdnym"
+fi
 cat >> "$HOME/agsbx/xr.json" <<EOF
     {
       "tag":"vless-xhttp",
@@ -309,6 +313,10 @@ echo "$port_vw" > "$HOME/agsbx/port_vw"
 fi
 port_vw=$(cat "$HOME/agsbx/port_vw")
 echo "Vless-ws-enc端口：$port_vw"
+if [ -n "$cdnym" ]; then
+echo "$cdnym" > "$HOME/agsbx/cdnym"
+echo "80系CDN或者回源CDN的host域名 (确保IP已解析在CF域名)：$cdnym"
+fi
 cat >> "$HOME/agsbx/xr.json" <<EOF
     {
       "tag":"vless-ws",
@@ -969,6 +977,7 @@ echo "下载Cloudflared-argo最新正式版内核：$argocore"
 url="https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-$cpu"; out="$HOME/agsbx/cloudflared"; (command -v curl>/dev/null 2>&1 && curl -Lo "$out" -# --retry 2 "$url") || (command -v wget>/dev/null 2>&1 && timeout 3 wget -O "$out" --tries=2 "$url")
 chmod +x "$HOME/agsbx/cloudflared"
 fi
+if [ "$argo" = "vmpt" ]; then argoport=$(cat "$HOME/agsbx/port_vm_ws" 2>/dev/null); echo "Vmess" > "$HOME/agsbx/vlvm"; elif [ "$argo" = "vwpt" ]; then argoport=$(cat "$HOME/agsbx/port_vw" 2>/dev/null); echo "Vless" > "$HOME/agsbx/vlvm"; fi; echo "$argoport" > "$HOME/agsbx/argoport.log"
 if [ -n "${ARGO_DOMAIN}" ] && [ -n "${ARGO_AUTH}" ]; then
 argoname='固定'
 if pidof systemd >/dev/null 2>&1 && [ "$EUID" -eq 0 ]; then
@@ -1010,9 +1019,8 @@ fi
 echo "${ARGO_DOMAIN}" > "$HOME/agsbx/sbargoym.log"
 echo "${ARGO_AUTH}" > "$HOME/agsbx/sbargotoken.log"
 else
-if [ "$argo" = "vmpt" ]; then argoport=$(cat "$HOME/agsbx/port_vm_ws" 2>/dev/null); echo "Vmess" > "$HOME/agsbx/vlvm"; elif [ "$argo" = "vwpt" ]; then argoport=$(cat "$HOME/agsbx/port_vw" 2>/dev/null); echo "Vless" > "$HOME/agsbx/vlvm"; fi; echo "$argoport" > "$HOME/agsbx/argoport.log"
 argoname='临时'
-nohup $HOME/agsbx/cloudflared tunnel --url http://localhost:$(cat $HOME/agsbx/argoport.log) --edge-ip-version auto --no-autoupdate --protocol http2 > $HOME/agsbx/argo.log 2>&1 &
+nohup "$HOME/agsbx/cloudflared" tunnel --url http://localhost:$(cat $HOME/agsbx/argoport.log) --edge-ip-version auto --no-autoupdate --protocol http2 > $HOME/agsbx/argo.log 2>&1 &
 fi
 echo "申请Argo$argoname隧道中……请稍等"
 sleep 8
@@ -1294,7 +1302,7 @@ argodomain=$(cat "$HOME/agsbx/sbargoym.log" 2>/dev/null)
 [ -z "$argodomain" ] && argodomain=$(grep -a trycloudflare.com "$HOME/agsbx/argo.log" 2>/dev/null | awk 'NR==2{print}' | awk -F// '{print $2}' | awk '{print $1}')
 if [ -n "$argodomain" ]; then
 vlvm=$(cat $HOME/agsbx/vlvm 2>/dev/null)
-if [ "$argo" = "vmpt" ]; then
+if [ "$vlvm" = "Vmess" ]; then
 vmatls_link1="vmess://$(echo "{ \"v\": \"2\", \"ps\": \"${sxname}vmess-ws-tls-argo-$hostname-443\", \"add\": \"yg1.ygkkk.dpdns.org\", \"port\": \"443\", \"id\": \"$uuid\", \"aid\": \"0\", \"scy\": \"auto\", \"net\": \"ws\", \"type\": \"none\", \"host\": \"$argodomain\", \"path\": \"/$uuid-vm\", \"tls\": \"tls\", \"sni\": \"$argodomain\", \"alpn\": \"\", \"fp\": \"chrome\"}" | base64 -w0)"
 echo "$vmatls_link1" >> "$HOME/agsbx/jh.txt"
 vmatls_link2="vmess://$(echo "{ \"v\": \"2\", \"ps\": \"${sxname}vmess-ws-tls-argo-$hostname-8443\", \"add\": \"yg2.ygkkk.dpdns.org\", \"port\": \"8443\", \"id\": \"$uuid\", \"aid\": \"0\", \"scy\": \"auto\", \"net\": \"ws\", \"type\": \"none\", \"host\": \"$argodomain\", \"path\": \"/$uuid-vm\", \"tls\": \"tls\", \"sni\": \"$argodomain\", \"alpn\": \"\", \"fp\": \"chrome\"}" | base64 -w0)"
@@ -1321,7 +1329,7 @@ vma_link12="vmess://$(echo "{ \"v\": \"2\", \"ps\": \"${sxname}vmess-ws-argo-$ho
 echo "$vma_link12" >> "$HOME/agsbx/jh.txt"
 vma_link13="vmess://$(echo "{ \"v\": \"2\", \"ps\": \"${sxname}vmess-ws-argo-$hostname-2095\", \"add\": \"[2400:cb00:2049::0]\", \"port\": \"2095\", \"id\": \"$uuid\", \"aid\": \"0\", \"scy\": \"auto\", \"net\": \"ws\", \"type\": \"none\", \"host\": \"$argodomain\", \"path\": \"/$uuid-vm\", \"tls\": \"\"}" | base64 -w0)"
 echo "$vma_link13" >> "$HOME/agsbx/jh.txt"
-elif [ "$argo" = "vwpt" ]; then
+elif [ "$vlvm" = "Vless" ]; then
 vwatls_link1="vless://$uuid@yg$(cfip).ygkkk.dpdns.org:443?encryption=$enkey&flow=xtls-rprx-vision&type=ws&host=$argodomain&path=$uuid-vw&security=tls&sni=$argodomain&fp=chrome&insecure=0&allowInsecure=0#${sxname}vless-ws-tls-argo-enc-vision-$hostname"
 echo "$vwatls_link1" >> "$HOME/agsbx/jh.txt"
 vwa_link2="vless://$uuid@yg$(cfip).ygkkk.dpdns.org:80?encryption=$enkey&flow=xtls-rprx-vision&type=ws&host=$argodomain&path=$uuid-vw&security=none#${sxname}vless-ws-argo-enc-vision-$hostname"

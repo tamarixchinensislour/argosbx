@@ -400,7 +400,7 @@
         <div class="protocol-group separator">
           <h3>Xray可选协议：</h3>
           <div class="protocol-grid">
-            <label><input type="checkbox" data-proto="vlpt"> Vless-tcp-reality-v <span class="pill">vlpt</span></label><input type="text" placeholder="留空则随机端口" data-port="vlpt">
+            <label><input type="checkbox" data-proto="vlpt"> Vless-tcp-reality-vision <span class="pill">vlpt</span></label><input type="text" placeholder="留空则随机端口" data-port="vlpt">
             <label><input type="checkbox" data-proto="xhpt"> Vless-xhttp-reality-enc <span class="pill">xhpt</span></label><input type="text" placeholder="留空则随机端口" data-port="xhpt">
             <label><input type="checkbox" data-proto="vxpt"> Vless-xhttp-enc <span class="pill">vxpt</span></label><input type="text" placeholder="留空则随机端口" data-port="vxpt">
             <label><input type="checkbox" data-proto="vwpt"> Vless-ws-enc <span class="pill">vwpt</span></label><input type="text" placeholder="留空则随机端口（Argo固定隧道必填URL端口）" data-port="vwpt">
@@ -426,7 +426,7 @@
       </section>
 
       <section class="card outbound-warp">
-        <h2>相关配置参数： </h2>
+        <h2>相关全局配置调整： </h2>
         <div class="row">
           <label>UUID 密码 <span class="pill">uuid</span></label>
           <div class="input-with-button">
@@ -435,7 +435,7 @@
           </div>
         </div>
         <div class="row"><label>Reality 域名 <span class="pill">reym</span></label><input id="reym" type="text" placeholder="留空则默认apple.com"/></div>
-        <div class="row"><label>CF解析IP的域名<span class="pill">cdnym</span></label><input id="cdnym" type="text" placeholder="Vmess-ws、Vless-xhttp/ws-enc启用本地IP端口CDN时可用" disabled/></div>
+        <div class="row"><label>CF解析IP的域名<span class="pill">cdnym</span></label><input id="cdnym" type="text" placeholder="Vmess-ws、Vless-xhttp/ws-enc启用80、回源CDN时可用" disabled/></div>
         <div class="row"><label>套WARP-IP出站 <span class="pill">warp</span></label>
           <select id="warp">
             <option value="">默认 服务器本地IP出站</option>
@@ -480,8 +480,8 @@
           <label>启用Argo隧道开关 <span class="pill">argo</span></label>
           <select id="argoSelect">
             <option value="">默认 关闭</option>
-            <option value="vwpt">启用Vless-ws-enc的Argo隧道 (vwpt自动启用Vless-ws-enc)</option>
-            <option value="vmpt">启用Vmess-ws的Argo隧道 (vmpt自动启用Vmess-ws)</option>
+            <option value="vwpt">启用Vless-ws-enc的Argo隧道 </option>
+            <option value="vmpt">启用Vmess-ws的Argo隧道 </option>
           </select>
         </div>
         <div class="row"><label>固定隧道CF域名 <span class="pill">agn</span></label><input id="agn" type="text" placeholder="Zero Trust已设置有子域名称的CF域名，留空则临时隧道" disabled></div>
@@ -491,10 +491,10 @@
       <section class="card shortcut-commands-card">
         <h2>如已安装脚本，可用以下四个的快捷方式：</h2>
         <div class="shortcut-commands-content">
-          <button class="command-button" data-command="list">节点显示的命令：list</button>
-          <button class="command-button" data-command="del">卸载脚本的命令：del</button>
-          <button class="command-button" data-command="res">重启脚本的命令：res</button>
-          <button class="command-button" data-command="rep">更换、添加、删除变量的命令（注:变量设置完成后再点击）：rep</button>
+          <button class="command-button" data-command="list">节点显示命令：list</button>
+          <button class="command-button" data-command="del">卸载脚本命令：del</button>
+          <button class="command-button" data-command="res">重启脚本命令：res</button>
+          <button class="command-button" data-command="rep">调整变量、更新脚本命令（注:变量设置完成后再点击）：rep</button>
         </div>
       </section>
 
@@ -802,3 +802,9 @@
 </script>
 </body>
 </html>
+
+
+
+
+
+
