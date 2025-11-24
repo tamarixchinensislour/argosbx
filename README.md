@@ -214,11 +214,13 @@ vwpt="80系端口、指定回源端口" cdnym="CF解析IP的域名" bash <(curl 
 
 3、更新脚本命令：```原已安装的自定义各种协议变量组 主脚本 rep``` 
 
-4、重启脚本命令：```agsbx res``` 或者 ```主脚本 res```
+4、更新Xray或Singbox内核命令：agsbx upx或ups 【或者】 主脚本 upx或ups
 
-5、卸载脚本命令：```agsbx del``` 或者 ```主脚本 del```
+5、重启脚本命令：```agsbx res``` 或者 ```主脚本 res```
 
-6、临时切换IPV4/IPV6节点配置 (双栈VPS专享)：
+6、卸载脚本命令：```agsbx del``` 或者 ```主脚本 del```
+
+7、临时切换IPV4/IPV6节点配置 (双栈VPS专享)：
 
 显示IPV4节点配置：```ippz=4 agsbx list```或者```ippz=4 主脚本 list```
 

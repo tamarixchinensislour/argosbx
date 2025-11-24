@@ -48,10 +48,10 @@ echo "主脚本：bash <(curl -Ls https://raw.githubusercontent.com/yonggekkk/ar
 echo "显示节点信息命令：agsbx list 【或者】 主脚本 list"
 echo "重置变量组命令：自定义各种协议变量组 agsbx rep 【或者】 自定义各种协议变量组 主脚本 rep"
 echo "更新脚本命令：原已安装的自定义各种协议变量组 主脚本 rep"
+echo "更新Xray或Singbox内核命令：agsbx upx或ups 【或者】 主脚本 upx或ups"
 echo "重启脚本命令：agsbx res 【或者】 主脚本 res"
 echo "卸载脚本命令：agsbx del 【或者】 主脚本 del"
-echo "双栈VPS显示IPv4节点配置命令：ippz=4 agsbx list 【或者】 ippz=4 主脚本 list"
-echo "双栈VPS显示IPv6节点配置命令：ippz=6 agsbx list 【或者】 ippz=6 主脚本 list"
+echo "双栈VPS显示IPv4/IPv6节点配置命令：ippz=4或6 agsbx list 【或者】 ippz=4或6 主脚本 list"
 echo "---------------------------------------------------------"
 echo
 }
@@ -134,7 +134,18 @@ case "$warp" in *s6*) sbyx='prefer_ipv6' ;; esac
 [ -z "$sbyx" ] && sbyx='prefer_ipv4'
 fi
 }
-
+upxray(){
+url="https://github.com/yonggekkk/argosbx/releases/download/argosbx/xray-$cpu"; out="$HOME/agsbx/xray"; (command -v curl >/dev/null 2>&1 && curl -Lo "$out" -# --retry 2 "$url") || (command -v wget>/dev/null 2>&1 && timeout 3 wget -O "$out" --tries=2 "$url")
+chmod +x "$HOME/agsbx/xray"
+sbcore=$("$HOME/agsbx/xray" version 2>/dev/null | awk '/^Xray/{print $2}')
+echo "已安装Xray正式版内核：$sbcore"
+}
+upsingbox(){
+url="https://github.com/yonggekkk/argosbx/releases/download/argosbx/sing-box-$cpu"; out="$HOME/agsbx/sing-box"; (command -v curl>/dev/null 2>&1 && curl -Lo "$out" -# --retry 2 "$url") || (command -v wget>/dev/null 2>&1 && timeout 3 wget -O "$out" --tries=2 "$url")
+chmod +x "$HOME/agsbx/sing-box"
+sbcore=$("$HOME/agsbx/sing-box" version 2>/dev/null | awk '/version/{print $NF}')
+echo "已安装Sing-box正式版内核：$sbcore"
+}
 insuuid(){
 if [ -z "$uuid" ] && [ ! -e "$HOME/agsbx/uuid" ]; then
 if [ -e "$HOME/agsbx/sing-box" ]; then
@@ -154,10 +165,7 @@ echo
 echo "=========启用xray内核========="
 mkdir -p "$HOME/agsbx/xrk"
 if [ ! -e "$HOME/agsbx/xray" ]; then
-url="https://github.com/yonggekkk/argosbx/releases/download/argosbx/xray-$cpu"; out="$HOME/agsbx/xray"; (command -v curl >/dev/null 2>&1 && curl -Lo "$out" -# --retry 2 "$url") || (command -v wget>/dev/null 2>&1 && timeout 3 wget -O "$out" --tries=2 "$url")
-chmod +x "$HOME/agsbx/xray"
-sbcore=$("$HOME/agsbx/xray" version 2>/dev/null | awk '/^Xray/{print $2}')
-echo "已安装Xray正式版内核：$sbcore"
+upxray
 fi
 cat > "$HOME/agsbx/xr.json" <<EOF
 {
@@ -402,10 +410,7 @@ installsb(){
 echo
 echo "=========启用Sing-box内核========="
 if [ ! -e "$HOME/agsbx/sing-box" ]; then
-url="https://github.com/yonggekkk/argosbx/releases/download/argosbx/sing-box-$cpu"; out="$HOME/agsbx/sing-box"; (command -v curl>/dev/null 2>&1 && curl -Lo "$out" -# --retry 2 "$url") || (command -v wget>/dev/null 2>&1 && timeout 3 wget -O "$out" --tries=2 "$url")
-chmod +x "$HOME/agsbx/sing-box"
-sbcore=$("$HOME/agsbx/sing-box" version 2>/dev/null | awk '/version/{print $NF}')
-echo "已安装Sing-box正式版内核：$sbcore"
+upsingbox
 fi
 cat > "$HOME/agsbx/sb.json" <<EOF
 {
@@ -1082,17 +1087,17 @@ argosbxstatus(){
 echo "=========当前三大内核运行状态========="
 procs=$(find /proc/*/exe -type l 2>/dev/null | grep -E '/proc/[0-9]+/exe' | xargs -r readlink 2>/dev/null)
 if echo "$procs" | grep -Eq 'agsbx/s' || pgrep -f 'agsbx/s' >/dev/null 2>&1; then
-echo "Sing-box：运行中"
+echo "Sing-box (版本V$("$HOME/agsbx/sing-box" version 2>/dev/null | awk '/version/{print $NF}'))：运行中"
 else
 echo "Sing-box：未启用"
 fi
 if echo "$procs" | grep -Eq 'agsbx/x' || pgrep -f 'agsbx/x' >/dev/null 2>&1; then
-echo "Xray：运行中"
+echo "Xray (版本V$("$HOME/agsbx/xray" version 2>/dev/null | awk '/^Xray/{print $2}'))：运行中"
 else
 echo "Xray：未启用"
 fi
 if echo "$procs" | grep -Eq 'agsbx/c' || pgrep -f 'agsbx/c' >/dev/null 2>&1; then
-echo "Argo：运行中"
+echo "Argo (版本V$("$HOME/agsbx/cloudflared" version 2>/dev/null | awk '{print $3}'))：运行中"
 else
 echo "Argo：未启用"
 fi
@@ -1361,9 +1366,12 @@ echo "========================================================="
 echo "相关快捷方式如下：(首次安装成功后需重连SSH，agsbx快捷方式才可生效)"
 showmode
 }
-cleandel(){
-for P in /proc/[0-9]*; do if [ -L "$P/exe" ]; then TARGET=$(readlink -f "$P/exe" 2>/dev/null); if echo "$TARGET" | grep -qE '/agsbx/c|/agsbx/s|/agsbx/x'; then PID=$(basename "$P"); kill "$PID" 2>/dev/null && echo "Killed $PID ($TARGET)" || echo "Could not kill $PID ($TARGET)"; fi; fi; done
+killargosbx(){
+for P in /proc/[0-9]*; do if [ -L "$P/exe" ]; then TARGET=$(readlink -f "$P/exe" 2>/dev/null); if echo "$TARGET" | grep -qE '/agsbx/c|/agsbx/s|/agsbx/x'; then PID=$(basename "$P"); kill "$PID" 2>/dev/null; fi; fi; done
 kill -15 $(pgrep -f 'agsbx/s' 2>/dev/null) $(pgrep -f 'agsbx/c' 2>/dev/null) $(pgrep -f 'agsbx/x' 2>/dev/null) >/dev/null 2>&1
+}
+cleandel(){
+killargosbx
 sed -i '/agsbx/d' ~/.bashrc
 sed -i '/export PATH="\$HOME\/bin:\$PATH"/d' ~/.bashrc
 . ~/.bashrc 2>/dev/null
@@ -1388,25 +1396,7 @@ done
 rm -rf /etc/init.d/{sing-box,xray,argo}
 fi
 }
-if [ "$1" = "del" ]; then
-cleandel
-rm -rf "$HOME/agsbx" "$HOME/agsb"
-echo "卸载完成"
-echo "欢迎继续使用甬哥侃侃侃ygkkk的Argosbx一键无交互小钢炮脚本💣" && sleep 2
-echo
-showmode
-exit
-elif [ "$1" = "rep" ]; then
-cleandel
-rm -rf "$HOME/agsbx"/{sb.json,xr.json,sbargoym.log,sbargotoken.log,argo.log,argoport.log,cdnym,name}
-echo "Argosbx重置协议完成，开始更新相关协议变量……" && sleep 3
-echo
-elif [ "$1" = "list" ]; then
-cip
-exit
-elif [ "$1" = "res" ]; then
-for P in /proc/[0-9]*; do if [ -L "$P/exe" ]; then TARGET=$(readlink -f "$P/exe" 2>/dev/null); if echo "$TARGET" | grep -qE '/agsbx/c|/agsbx/s|/agsbx/x'; then PID=$(basename "$P"); kill "$PID" 2>/dev/null; fi; fi; done
-kill -15 $(pgrep -f 'agsbx/s' 2>/dev/null) $(pgrep -f 'agsbx/c' 2>/dev/null) $(pgrep -f 'agsbx/x' 2>/dev/null) >/dev/null 2>&1
+sbxrestart(){
 if pidof systemd >/dev/null 2>&1; then
 for svc in sb xr argo; do
 systemctl restart "$svc" >/dev/null 2>&1
@@ -1424,10 +1414,37 @@ if ! pidof systemd >/dev/null 2>&1 && ! command -v rc-service >/dev/null 2>&1; t
 nohup $HOME/agsbx/cloudflared tunnel --no-autoupdate --edge-ip-version auto --protocol http2 run --token $(cat $HOME/agsbx/sbargotoken.log 2>/dev/null) >/dev/null 2>&1 &
 fi
 else
-nohup $HOME/agsbx/cloudflared tunnel --url http://localhost:$(cat $HOME/agsbx/argoport.log) --edge-ip-version auto --no-autoupdate --protocol http2 > $HOME/agsbx/argo.log 2>&1 &
+nohup $HOME/agsbx/cloudflared tunnel --url http://localhost:$(cat $HOME/agsbx/argoport.log 2>/dev/null) --edge-ip-version auto --no-autoupdate --protocol http2 > $HOME/agsbx/argo.log 2>&1 &
 fi
 sleep 8
 echo "重启完成"
+}
+if [ "$1" = "del" ]; then
+cleandel
+rm -rf "$HOME/agsbx" "$HOME/agsb"
+echo "卸载完成"
+echo "欢迎继续使用甬哥侃侃侃ygkkk的Argosbx一键无交互小钢炮脚本💣" && sleep 2
+echo
+showmode
+exit
+elif [ "$1" = "rep" ]; then
+cleandel
+rm -rf "$HOME/agsbx"/{sb.json,xr.json,sbargoym.log,sbargotoken.log,argo.log,argoport.log,cdnym,name}
+echo "Argosbx重置协议完成，开始更新相关协议变量……" && sleep 2
+echo
+elif [ "$1" = "list" ]; then
+cip
+exit
+elif [ "$1" = "upx" ]; then
+killargosbx ; upxray ; sbxrestart ; cip
+echo "Xray内核更新完成"
+exit
+elif [ "$1" = "ups" ]; then
+killargosbx ; upsingbox ; sbxrestart ; cip
+echo "Sing-box内核更新完成"
+exit
+elif [ "$1" = "res" ]; then
+killargosbx ; sbxrestart ; cip
 exit
 fi
 if ! find /proc/*/exe -type l 2>/dev/null | grep -E '/proc/[0-9]+/exe' | xargs -r readlink 2>/dev/null | grep -Eq 'agsbx/(s|x)' && ! pgrep -f 'agsbx/(s|x)' >/dev/null 2>&1; then
