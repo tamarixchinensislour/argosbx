@@ -28,7 +28,7 @@
 
 电脑win客户端：[V2rayN官方版(全协议支持)](https://github.com/2dust/v2rayN/releases)
 
-苹果IOS客户端：Shadowrocket(小火箭)、OneXray、Streisand、Karing
+苹果IOS客户端：OneXray、Streisand、Shadowrocket(小火箭)、Karing
 
 ----------------------------------------------------------
 

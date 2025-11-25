@@ -162,7 +162,7 @@ private_key_x=$(cat "$HOME/agsbx/xrk/private_key")
 public_key_x=$(cat "$HOME/agsbx/xrk/public_key")
 short_id_x=$(cat "$HOME/agsbx/xrk/short_id")
 fi
-if [ -n "$xhpt" ] || [ -n "$vxpt" ]; then
+if [ -n "$xhpt" ] || [ -n "$vxpt" ] || [ -n "$vwpt" ]; then
 if [ ! -e "$HOME/agsbx/xrk/dekey" ]; then
 vlkey=$("$HOME/agsbx/xray" vlessenc)
 dekey=$(echo "$vlkey" | grep '"decryption":' | sed -n '2p' | cut -d' ' -f2- | tr -d '"')
@@ -742,45 +742,7 @@ cat >> "$HOME/agsbx/xr.json" <<EOF
   }
 }
 EOF
-if pidof systemd >/dev/null 2>&1 && [ "$EUID" -eq 0 ]; then
-cat > /etc/systemd/system/xr.service <<EOF
-[Unit]
-Description=xr service
-After=network.target
-[Service]
-Type=simple
-NoNewPrivileges=yes
-TimeoutStartSec=0
-ExecStart=/root/agsbx/xray run -c /root/agsbx/xr.json
-Restart=on-failure
-RestartSec=5s
-StandardOutput=journal
-StandardError=journal
-[Install]
-WantedBy=multi-user.target
-EOF
-systemctl daemon-reload >/dev/null 2>&1
-systemctl enable xr >/dev/null 2>&1
-systemctl start xr >/dev/null 2>&1
-elif command -v rc-service >/dev/null 2>&1 && [ "$EUID" -eq 0 ]; then
-cat > /etc/init.d/xray <<EOF
-#!/sbin/openrc-run
-description="xr service"
-command="/root/agsbx/xray"
-command_args="run -c /root/agsbx/xr.json"
-command_background=yes
-pidfile="/run/xray.pid"
-command_background="yes"
-depend() {
-need net
-}
-EOF
-chmod +x /etc/init.d/xray >/dev/null 2>&1
-rc-update add xray default >/dev/null 2>&1
-rc-service xray start >/dev/null 2>&1
-else
 nohup "$HOME/agsbx/xray" run -c "$HOME/agsbx/xr.json" >/dev/null 2>&1 &
-fi
 fi
 if [ -e "$HOME/agsbx/sb.json" ]; then
 sed -i '${s/,\s*$//}' "$HOME/agsbx/sb.json"
@@ -842,45 +804,7 @@ cat >> "$HOME/agsbx/sb.json" <<EOF
   }
 }
 EOF
-if pidof systemd >/dev/null 2>&1 && [ "$EUID" -eq 0 ]; then
-cat > /etc/systemd/system/sb.service <<EOF
-[Unit]
-Description=sb service
-After=network.target
-[Service]
-Type=simple
-NoNewPrivileges=yes
-TimeoutStartSec=0
-ExecStart=/root/agsbx/sing-box run -c /root/agsbx/sb.json
-Restart=on-failure
-RestartSec=5s
-StandardOutput=journal
-StandardError=journal
-[Install]
-WantedBy=multi-user.target
-EOF
-systemctl daemon-reload >/dev/null 2>&1
-systemctl enable sb >/dev/null 2>&1
-systemctl start sb >/dev/null 2>&1
-elif command -v rc-service >/dev/null 2>&1 && [ "$EUID" -eq 0 ]; then
-cat > /etc/init.d/sing-box <<EOF
-#!/sbin/openrc-run
-description="sb service"
-command="/root/agsbx/sing-box"
-command_args="run -c /root/agsbx/sb.json"
-command_background=yes
-pidfile="/run/sing-box.pid"
-command_background="yes"
-depend() {
-need net
-}
-EOF
-chmod +x /etc/init.d/sing-box >/dev/null 2>&1
-rc-update add sing-box default >/dev/null 2>&1
-rc-service sing-box start >/dev/null 2>&1
-else
 nohup "$HOME/agsbx/sing-box" run -c "$HOME/agsbx/sb.json" >/dev/null 2>&1 &
-fi
 fi
 }
 ins(){
@@ -904,6 +828,8 @@ xrsbso
 warpsx
 xrsbout
 fi
+
+
 if [ -n "$argo" ]; then
 echo
 echo "=========启用Cloudflared-argo内核========="
@@ -913,45 +839,10 @@ echo "下载Cloudflared-argo最新正式版内核：$argocore"
 url="https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-$cpu"; out="$HOME/agsbx/cloudflared"; (command -v curl>/dev/null 2>&1 && curl -Lo "$out" -# --retry 2 "$url") || (command -v wget>/dev/null 2>&1 && timeout 3 wget -O "$out" --tries=2 "$url")
 chmod +x "$HOME/agsbx/cloudflared"
 fi
-if [ "$argo" = "vmpt" ]; then argoport=$(cat "$HOME/agsbx/port_vm_ws" 2>/dev/null); echo "Vmess" > "$HOME/agsbx/vlvm"; elif [ "$argo" = "vwpt" ]; then argoport=$(cat "$HOME/agsbx/port_vw" 2>/dev/null); echo "Vless" > "$HOME/agsbx/vlvm"; fi; echo "$argoport" > "$HOME/agsbx/argoport.log"
+if [ "$argo" = "vmpt" ]; then argoport=$(cat "$HOME/agsbx/vmpt" 2>/dev/null); echo "Vmess" > "$HOME/agsbx/vlvm"; elif [ "$argo" = "vwpt" ]; then argoport=$(cat "$HOME/agsbx/vwpt" 2>/dev/null); echo "Vless" > "$HOME/agsbx/vlvm"; fi; echo "$argoport" > "$HOME/agsbx/argoport.log"
 if [ -n "${agn}" ] && [ -n "${agk}" ]; then
 argoname='固定'
-if pidof systemd >/dev/null 2>&1 && [ "$EUID" -eq 0 ]; then
-cat > /etc/systemd/system/argo.service <<EOF
-[Unit]
-Description=argo service
-After=network.target
-[Service]
-Type=simple
-NoNewPrivileges=yes
-TimeoutStartSec=0
-ExecStart=/root/agsbx/cloudflared tunnel --no-autoupdate --edge-ip-version auto --protocol http2 run --token "${agk}"
-Restart=on-failure
-RestartSec=5s
-[Install]
-WantedBy=multi-user.target
-EOF
-systemctl daemon-reload >/dev/null 2>&1
-systemctl enable argo >/dev/null 2>&1
-systemctl start argo >/dev/null 2>&1
-elif command -v rc-service >/dev/null 2>&1 && [ "$EUID" -eq 0 ]; then
-cat > /etc/init.d/argo <<EOF
-#!/sbin/openrc-run
-description="argo service"
-command="/root/agsbx/cloudflared tunnel"
-command_args="--no-autoupdate --edge-ip-version auto --protocol http2 run --token ${agk}"
-pidfile="/run/argo.pid"
-command_background="yes"
-depend() {
-need net
-}
-EOF
-chmod +x /etc/init.d/argo >/dev/null 2>&1
-rc-update add argo default >/dev/null 2>&1
-rc-service argo start >/dev/null 2>&1
-else
 nohup "$HOME/agsbx/cloudflared" tunnel --no-autoupdate --edge-ip-version auto --protocol http2 run --token "${agk}" >/dev/null 2>&1 &
-fi
 echo "${agn}" > "$HOME/agsbx/sbargoym.log"
 echo "${agk}" > "$HOME/agsbx/sbargotoken.log"
 else
@@ -970,12 +861,11 @@ echo "Argo$argoname隧道申请成功"
 else
 echo "Argo$argoname隧道申请失败，请稍后再试"
 fi
-fi
-
 if find /proc/*/exe -type l 2>/dev/null | grep -E '/proc/[0-9]+/exe' | xargs -r readlink 2>/dev/null | grep -Eq 'agsbx/(s|x)' || pgrep -f 'agsbx/(s|x)' >/dev/null 2>&1 ; then
 echo "Argosbx脚本进程启动成功，安装完毕" && sleep 2
 else
 echo "Argosbx脚本进程未启动，安装失败" && exit
+fi
 fi
 }
 argosbxstatus(){
@@ -1233,7 +1123,7 @@ elif [ "$vlvm" = "Vless" ]; then
 vwatls_link1="vless://$uuid@yg$(cfip).ygkkk.dpdns.org:443?encryption=$enkey&flow=xtls-rprx-vision&type=ws&host=$argodomain&path=$uuid-vw&security=tls&sni=$argodomain&fp=chrome&insecure=0&allowInsecure=0#${sxname}vless-ws-tls-argo-enc-vision-$hostname"
 echo "$vwatls_link1" >> "$HOME/agsbx/jh.txt"
 vwa_link2="vless://$uuid@yg$(cfip).ygkkk.dpdns.org:80?encryption=$enkey&flow=xtls-rprx-vision&type=ws&host=$argodomain&path=$uuid-vw&security=none#${sxname}vless-ws-argo-enc-vision-$hostname"
-echo "$vwatls_link2" >> "$HOME/agsbx/jh.txt"
+echo "$vwa_link2" >> "$HOME/agsbx/jh.txt"
 fi
 sbtk=$(cat "$HOME/agsbx/sbargotoken.log" 2>/dev/null)
 if [ -n "$sbtk" ]; then
