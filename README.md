@@ -28,7 +28,7 @@
 
 电脑win客户端：[V2rayN官方版(全协议支持)](https://github.com/2dust/v2rayN/releases)
 
-苹果IOS客户端：OneXray、Streisand、Shadowrocket(小火箭)、Karing
+苹果IOS客户端：OneXray、Streisand
 
 ----------------------------------------------------------
 
@@ -197,10 +197,10 @@ Vless-ws-vision-enc的80系端口、回源端口的CDN优选节点
 vwpt="80系端口、指定回源端口" cdnym="CF解析IP的域名" bash <(curl -Ls https://raw.githubusercontent.com/yonggekkk/argosbx/main/argosbx.sh)
 ```
 
-* #### 如下图：节点IP、端口被封依旧可用！套CDN优选4大方案：[点击视频教程](https://youtu.be/RnUT1CNbCr8)
+* #### 如下图：节点IP、端口被封依旧可用！套CDN优选5大方案：[点击视频教程](https://youtu.be/RnUT1CNbCr8)
 * #### 更新：CDN优选域名：yg1.ygkkk.dpdns.org (yg1中的1，可换为1-13中任意数字)
 
-<img width="1680" height="823" alt="d65cb398ed08713650c9fd6b5fb8e4be" src="https://github.com/user-attachments/assets/5e86ab5f-3202-465d-a94c-038259989060" />
+<img width="1776" height="960" alt="f51af75fcc76bae7e76fe0ef5b9ecc86" src="https://github.com/user-attachments/assets/028b780d-bd48-4c79-8c60-940b3c3d1937" />
 
 ---------------------------------------------------------
 
