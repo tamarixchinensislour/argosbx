@@ -197,8 +197,13 @@ Vless-ws-vision-enc的80系端口、回源端口的CDN优选节点
 vwpt="80系端口、指定回源端口" cdnym="CF解析IP的域名" bash <(curl -Ls https://raw.githubusercontent.com/yonggekkk/argosbx/main/argosbx.sh)
 ```
 
-* #### 如下图：节点IP、端口被封依旧可用！套CDN优选5大方案：[点击视频教程](https://youtu.be/RnUT1CNbCr8)
-* #### 更新：CDN优选域名：yg1.ygkkk.dpdns.org (yg1中的1，可换为1-13中任意数字)
+* #### 如下图：节点IP、端口被封依旧可用！套CDN优选5大方案三步视频教程：
+  
+[视频1：80系+回源cdn](https://youtu.be/RnUT1CNbCr8)
+
+[视频2：Argo临时/固定隧道区别与设置](https://youtu.be/K35NhrNiLK8)
+
+[视频3：黑科技80端口CDN](https://youtu.be/X8BFVyeiY9g)
 
 <img width="1776" height="960" alt="f51af75fcc76bae7e76fe0ef5b9ecc86" src="https://github.com/user-attachments/assets/028b780d-bd48-4c79-8c60-940b3c3d1937" />
 
