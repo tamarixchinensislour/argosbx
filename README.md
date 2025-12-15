@@ -72,7 +72,7 @@
 
 * #### 如下图：Clawcloud爪云4套价格+7组协议的组合任你选：[点击视频教程](https://youtu.be/xOQV_E1-C84)
 
-<img width="869" height="602" alt="25d8af7b9b43d49d84ed84826600bebb" src="https://github.com/user-attachments/assets/739e4e86-8326-4c80-861d-5726c7f96481" />
+<img width="905" height="602" alt="1c75e661588fe183bb6ad46edb836ca2" src="https://github.com/user-attachments/assets/86310eac-6700-4ea9-95e9-ddd9fc27e925" />
 
 ------------------------------------------------------------------
 
