@@ -66,8 +66,8 @@ hostname=$(uname -a | awk '{print $2}')
 op=$(cat /etc/redhat-release 2>/dev/null || cat /etc/os-release 2>/dev/null | grep -i pretty_name | cut -d \" -f2)
 [ -z "$(systemd-detect-virt 2>/dev/null)" ] && vi=$(virt-what 2>/dev/null) || vi=$(systemd-detect-virt 2>/dev/null)
 case $(uname -m) in
-aarch64) cpu=arm64;;
-x86_64) cpu=amd64;;
+arm64|aarch64) cpu=arm64;;
+amd64|x86_64) cpu=amd64;;
 *) echo "目前脚本不支持$(uname -m)架构" && exit
 esac
 mkdir -p "$HOME/agsbx"
