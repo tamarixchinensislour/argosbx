@@ -150,7 +150,7 @@ if [ "$v4_ok" = true ] && [ "$v6_ok" = true ]; then
 case "$warp" in *s4*) sbyx='prefer_ipv4' ;; *) sbyx='prefer_ipv6' ;; esac
 case "$warp" in *x4*) xryx='ForceIPv4v6' ;; *x*) xryx='ForceIPv6v4' ;; *) xryx='ForceIPv4v6' ;; esac
 elif [ "$v4_ok" = true ] && [ "$v6_ok" != true ]; then
-case "$warp" in *s4*) sbyx='ipv4_only' ;; *) sbyx='prefer_ipv6' ;; esac
+case "$warp" in *s4*|*x*) sbyx='ipv4_only' ;; *) sbyx='prefer_ipv6' ;; esac
 case "$warp" in *x4*) xryx='ForceIPv4' ;; *x*) xryx='ForceIPv6v4' ;; *) xryx='ForceIPv4v6' ;; esac
 elif [ "$v4_ok" != true ] && [ "$v6_ok" = true ]; then
 case "$warp" in *s6*) sbyx='ipv6_only' ;; *) sbyx='prefer_ipv4' ;; esac
@@ -1104,6 +1104,14 @@ echo "Argosbx脚本进程启动成功，安装完毕" && sleep 2
 else
 echo "Argosbx脚本进程未启动，安装失败" && exit
 fi
+if [ -n "$cfip" ]; then
+set -- $cfip
+cdnip1="$1"
+cdnip2="$2"
+else
+cdnip1="yg1.ygkkk.dpdns.org"
+cdnip2="yg6.ygkkk.dpdns.org"
+fi
 }
 argosbxstatus(){
 echo "=========当前三大内核运行状态========="
@@ -1513,7 +1521,7 @@ if grep hy2-sb "$HOME/agsbx/sb.json" >/dev/null 2>&1; then
 echo "💣【 Hysteria2 】节点信息如下："
 port_hy2=$(cat "$HOME/agsbx/port_hy2")
 hy2_ports=$(iptables -t nat -nL --line 2>/dev/null | grep -w "$port_hy2" | awk '{print $8}' | sed 's/dpts://; s/dpt://' | tr '\n' ',' | sed 's/,$//')
-if [ -n "$hy2_ports" ]; then
+if [ -n "$hy2_ports" ] && [ -n "$hyjpt" ]; then
 echo "Hysteria2跳跃端口已开启：$hy2_ports"
 cmhy2pt=$(echo $hy2_ports | tr ':' '-')
 hyps="&mport=$cmhy2pt"
@@ -1643,7 +1651,7 @@ argodomain=$(cat "$HOME/agsbx/sbargoym.log" 2>/dev/null)
 if [ -n "$argodomain" ]; then
 vlvm=$(cat $HOME/agsbx/vlvm 2>/dev/null)
 if [ "$vlvm" = "Vmess" ]; then
-vmatls_link1="vmess://$(echo "{ \"v\": \"2\", \"ps\": \"${sxname}vmess-ws-tls-argo-$hostname-443\", \"add\": \"yg1.ygkkk.dpdns.org\", \"port\": \"443\", \"id\": \"$uuid\", \"aid\": \"0\", \"scy\": \"auto\", \"net\": \"ws\", \"type\": \"none\", \"host\": \"$argodomain\", \"path\": \"/$uuid-vm\", \"tls\": \"tls\", \"sni\": \"$argodomain\", \"alpn\": \"\", \"fp\": \"chrome\"}" | base64 -w0)"
+vmatls_link1="vmess://$(echo "{ \"v\": \"2\", \"ps\": \"${sxname}vmess-ws-tls-argo-$hostname-443\", \"add\": \"$cdnip1\", \"port\": \"443\", \"id\": \"$uuid\", \"aid\": \"0\", \"scy\": \"auto\", \"net\": \"ws\", \"type\": \"none\", \"host\": \"$argodomain\", \"path\": \"/$uuid-vm\", \"tls\": \"tls\", \"sni\": \"$argodomain\", \"alpn\": \"\", \"fp\": \"chrome\"}" | base64 -w0)"
 echo "$vmatls_link1" >> "$HOME/agsbx/jhsub.txt"
 vmatls_link2="vmess://$(echo "{ \"v\": \"2\", \"ps\": \"${sxname}vmess-ws-tls-argo-$hostname-8443\", \"add\": \"yg2.ygkkk.dpdns.org\", \"port\": \"8443\", \"id\": \"$uuid\", \"aid\": \"0\", \"scy\": \"auto\", \"net\": \"ws\", \"type\": \"none\", \"host\": \"$argodomain\", \"path\": \"/$uuid-vm\", \"tls\": \"tls\", \"sni\": \"$argodomain\", \"alpn\": \"\", \"fp\": \"chrome\"}" | base64 -w0)"
 echo "$vmatls_link2" >> "$HOME/agsbx/jhsub.txt"
@@ -1655,7 +1663,7 @@ vmatls_link5="vmess://$(echo "{ \"v\": \"2\", \"ps\": \"${sxname}vmess-ws-tls-ar
 echo "$vmatls_link5" >> "$HOME/agsbx/jhsub.txt"
 vmatls_link6="vmess://$(echo "{ \"v\": \"2\", \"ps\": \"${sxname}vmess-ws-tls-argo-$hostname-2096\", \"add\": \"[2606:4700::0]\", \"port\": \"2096\", \"id\": \"$uuid\", \"aid\": \"0\", \"scy\": \"auto\", \"net\": \"ws\", \"type\": \"none\", \"host\": \"$argodomain\", \"path\": \"/$uuid-vm\", \"tls\": \"tls\", \"sni\": \"$argodomain\", \"alpn\": \"\", \"fp\": \"chrome\"}" | base64 -w0)"
 echo "$vmatls_link6" >> "$HOME/agsbx/jhsub.txt"
-vma_link7="vmess://$(echo "{ \"v\": \"2\", \"ps\": \"${sxname}vmess-ws-argo-$hostname-80\", \"add\": \"yg6.ygkkk.dpdns.org\", \"port\": \"80\", \"id\": \"$uuid\", \"aid\": \"0\", \"scy\": \"auto\", \"net\": \"ws\", \"type\": \"none\", \"host\": \"$argodomain\", \"path\": \"/$uuid-vm\", \"tls\": \"\"}" | base64 -w0)"
+vma_link7="vmess://$(echo "{ \"v\": \"2\", \"ps\": \"${sxname}vmess-ws-argo-$hostname-80\", \"add\": \"$cdnip2\", \"port\": \"80\", \"id\": \"$uuid\", \"aid\": \"0\", \"scy\": \"auto\", \"net\": \"ws\", \"type\": \"none\", \"host\": \"$argodomain\", \"path\": \"/$uuid-vm\", \"tls\": \"\"}" | base64 -w0)"
 echo "$vma_link7" >> "$HOME/agsbx/jhsub.txt"
 vma_link8="vmess://$(echo "{ \"v\": \"2\", \"ps\": \"${sxname}vmess-ws-argo-$hostname-8080\", \"add\": \"yg7.ygkkk.dpdns.org\", \"port\": \"8080\", \"id\": \"$uuid\", \"aid\": \"0\", \"scy\": \"auto\", \"net\": \"ws\", \"type\": \"none\", \"host\": \"$argodomain\", \"path\": \"/$uuid-vm\", \"tls\": \"\"}" | base64 -w0)"
 echo "$vma_link8" >> "$HOME/agsbx/jhsub.txt"
@@ -1672,7 +1680,7 @@ echo "$vma_link13" >> "$HOME/agsbx/jhsub.txt"
 sbvmargopt(){
 cat <<EOF
 {
-            "server": "yg1.ygkkk.dpdns.org",
+            "server": "$cdnip1",
             "server_port": 443,
             "tag": "${sxname}vmess-ws-tls-argo-$hostname-443",
             "tls": {
@@ -1699,7 +1707,7 @@ cat <<EOF
             "uuid": "$uuid"
         },
 {
-            "server": "yg6.ygkkk.dpdns.org",
+            "server": "$cdnip2",
             "server_port": 80,
             "tag": "${sxname}vmess-ws-argo-$hostname-80",
             "tls": {
@@ -1735,7 +1743,7 @@ clvmargopt(){
 cat <<EOF
 - name: ${sxname}vmess-ws-tls-argo-$hostname-443                         
   type: vmess
-  server: yg1.ygkkk.dpdns.org                        
+  server: "$cdnip1"                       
   port: 443                                     
   uuid: $uuid       
   alterId: 0
@@ -1750,7 +1758,7 @@ cat <<EOF
       Host: $argodomain
 - name: ${sxname}vmess-ws-argo-$hostname-80                         
   type: vmess
-  server: yg6.ygkkk.dpdns.org                        
+  server: "$cdnip2"                        
   port: 80                                     
   uuid: $uuid       
   alterId: 0
@@ -1770,9 +1778,9 @@ echo "- ${sxname}vmess-ws-tls-argo-$hostname-443"
 echo "- ${sxname}vmess-ws-argo-$hostname-80"
 }
 elif [ "$vlvm" = "Vless" ]; then
-vwatls_link1="vless://$uuid@yg$(cfip).ygkkk.dpdns.org:443?encryption=$enkey&flow=xtls-rprx-vision&type=ws&host=$argodomain&path=$uuid-vw&security=tls&sni=$argodomain&fp=chrome&insecure=0&allowInsecure=0#${sxname}vless-ws-tls-argo-enc-vision-$hostname"
+vwatls_link1="vless://$uuid@$cdnip1:443?encryption=$enkey&flow=xtls-rprx-vision&type=ws&host=$argodomain&path=$uuid-vw&security=tls&sni=$argodomain&fp=chrome&insecure=0&allowInsecure=0#${sxname}vless-ws-tls-argo-enc-vision-$hostname"
 echo "$vwatls_link1" >> "$HOME/agsbx/jhsub.txt"
-vwa_link2="vless://$uuid@yg$(cfip).ygkkk.dpdns.org:80?encryption=$enkey&flow=xtls-rprx-vision&type=ws&host=$argodomain&path=$uuid-vw&security=none#${sxname}vless-ws-argo-enc-vision-$hostname"
+vwa_link2="vless://$uuid@$cdnip2:80?encryption=$enkey&flow=xtls-rprx-vision&type=ws&host=$argodomain&path=$uuid-vw&security=none#${sxname}vless-ws-argo-enc-vision-$hostname"
 echo "$vwa_link2" >> "$HOME/agsbx/jhsub.txt"
 fi
 sbtk=$(cat "$HOME/agsbx/sbargotoken.log" 2>/dev/null)
@@ -2172,18 +2180,16 @@ xrestart
 *"/agsbx/c"*)
 kill "$(basename "$P")" 2>/dev/null
 kill -15 $(pgrep -f 'agsbx/c' 2>/dev/null) >/dev/null 2>&1
+if [ -e "$HOME/agsbx/sbargotoken.log" ]; then
 if pidof systemd >/dev/null 2>&1; then
 systemctl restart argo >/dev/null 2>&1
 elif command -v rc-service >/dev/null 2>&1; then
 rc-service argo restart >/dev/null 2>&1
 else
-if [ -e "$HOME/agsbx/sbargotoken.log" ]; then
-if ! pidof systemd >/dev/null 2>&1 && ! command -v rc-service >/dev/null 2>&1; then
 nohup $HOME/agsbx/cloudflared tunnel --no-autoupdate --edge-ip-version auto --protocol http2 run --token $(cat $HOME/agsbx/sbargotoken.log 2>/dev/null) >/dev/null 2>&1 &
 fi
 else
 nohup $HOME/agsbx/cloudflared tunnel --url http://localhost:$(cat $HOME/agsbx/argoport.log 2>/dev/null) --edge-ip-version auto --no-autoupdate --protocol http2 > $HOME/agsbx/argo.log 2>&1 &
-fi
 fi
 ;;
 esac
@@ -2276,8 +2282,6 @@ echo "设置Hysteria2协议的跳跃端口：$hyjpt"
 iptables -t nat -F PREROUTING >/dev/null 2>&1
 ip6tables -t nat -F PREROUTING >/dev/null 2>&1
 hyport=$(cat "$HOME/agsbx/port_hy2")
-#hyjppt=($hyjpt)
-#for port in "${hyjppt[@]}"; do
 for port in $hyjpt; do
 iptables -t nat -A PREROUTING -p udp --dport "$port" -j DNAT --to-destination :$hyport
 ip6tables -t nat -A PREROUTING -p udp --dport "$port" -j DNAT --to-destination :$hyport

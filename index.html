@@ -510,6 +510,7 @@
         </div>
         <div class="row"><label>固定隧道CF域名 <span class="pill">agn</span></label><input id="agn" type="text" placeholder="Zero Trust已设置有子域名称的CF域名，留空则临时隧道" disabled></div>
         <div class="row"><label>固定隧道Token <span class="pill">agk</span></label><input id="agk" type="text" placeholder="Zero Trust已提取ey开头的秘钥，留空则临时隧道" disabled></div>
+        <div class="row"><label>Argo优选IP域名 <span class="pill">cfip</span></label><input id="cfip" type="text" placeholder="两个优选IP(域名V4[V6])，留空则默认优选域名" disabled></div>
       </section>
 
       <section class="card shortcut-commands-card">
@@ -520,7 +521,7 @@
           <button class="command-button" data-command="upx">升级Xray内核：upx</button>
           <button class="command-button" data-command="ups">升级Singbox内核：ups</button>
           <button class="command-button" data-command="res">重启脚本命令：res</button>
-          <button class="command-button" data-command="rep">调整变量、更新脚本命令（注:变量设置完成后再点击）：rep</button>
+          <button class="command-button" data-command="rep">调整变量、更新脚本命令（注:所有变量设置完成后再点击）：rep</button>
         </div>
       </section>
 
@@ -562,6 +563,7 @@
   const argoSelect = document.getElementById('argoSelect');
   const agn = document.getElementById('agn');
   const agk = document.getElementById('agk');
+  const cfip = document.getElementById('cfip');
   const sub = document.getElementById('sub');
   const subid = document.getElementById('subid');
   const subpt = document.getElementById('subpt');
@@ -610,8 +612,9 @@
     if (!isEnabled) {
       agn.value = '';
       agk.value = '';
+      cfip.value = '';
     }
-    [agn, agk].forEach(i => i.disabled = !isEnabled);
+    [agn, agk, cfip].forEach(i => i.disabled = !isEnabled);
   }
 
   function updateSubState() {
@@ -671,7 +674,7 @@
   argoSelect.addEventListener('change', () => {
     const argoValue = argoSelect.value;
     const isEnabled = argoValue !== '';
-    [agn, agk].forEach(i => i.disabled = !isEnabled);
+    [agn, agk, cfip].forEach(i => i.disabled = !isEnabled);
     if (argoValue === 'vwpt') {
         vlessWsVCheckbox.checked = true;
     } else if (argoValue === 'vmpt') {
@@ -680,6 +683,7 @@
     if (!isEnabled) {
         agn.value = '';
         agk.value = '';
+        cfip.value = '';
     }
     updateDynamicInputs(); 
     render();
@@ -760,8 +764,10 @@
       m['argo'] = argoValue; 
       const _agn = (agn.value || '').trim();
       const _agk = (agk.value || '').trim();
+      const _cfip = (cfip.value || '').trim();
       if (!agn.disabled && _agn) m['agn'] = _agn;
       if (!agk.disabled && _agk) m['agk'] = _agk;
+      if (!cfip.disabled && _cfip) m['cfip'] = _cfip;
     }
     return m;
   }
@@ -774,6 +780,7 @@
     if (keys.includes('argo')) ordered.push('argo');
     if (keys.includes('agn')) ordered.push('agn');
     if (keys.includes('agk')) ordered.push('agk');
+    if (keys.includes('cfip')) ordered.push('cfip');
     if (keys.includes('oap')) ordered.push('oap');
     keys.forEach(k => { if (!ordered.includes(k)) ordered.push(k); });
 
