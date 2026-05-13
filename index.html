@@ -439,7 +439,7 @@
           </div>
         </div>
         <div class="row"><label>Reality 域名 <span class="pill">reym</span></label><input id="reym" type="text" placeholder="选择Reality相关协议后可用，留空默认apple.com" disabled/></div>
-        <div class="row"><label>Hysteria2端口跳跃 <span class="pill">hyjpt</span></label><input id="hyjpt" type="text" placeholder="选择Hysteria2协议后可用，例：123:456 789" disabled/></div>
+        <div class="row"><label>Hysteria2端口跳跃 <span class="pill">hyjpt</span></label><input id="hyjpt" type="text" placeholder="支持多个范围端口与单端口混用(空格间隔)，例：123:456 789" disabled/></div>
         <div class="row"><label>CF解析IP的域名<span class="pill">cdnym</span></label><input id="cdnym" type="text" placeholder="Vmess-ws、Vless-xhttp/ws-enc启用80、回源CDN时可用" disabled/></div>
         <div class="row"><label>套WARP-IP出站 <span class="pill">warp</span></label>
           <select id="warp">
@@ -484,7 +484,7 @@
         <div class="row">
           <label>启用订阅链接 <span class="pill">sub</span></label>
           <select id="sub">
-            <option value="">默认 关闭</option>
+            <option value="">默认 关闭 (仅显示单节点分享链接)</option>
             <option value="y">开启</option>
           </select>
         </div>
@@ -510,7 +510,7 @@
         </div>
         <div class="row"><label>固定隧道CF域名 <span class="pill">agn</span></label><input id="agn" type="text" placeholder="Zero Trust已设置有子域名称的CF域名，留空则临时隧道" disabled></div>
         <div class="row"><label>固定隧道Token <span class="pill">agk</span></label><input id="agk" type="text" placeholder="Zero Trust已提取ey开头的秘钥，留空则临时隧道" disabled></div>
-        <div class="row"><label>Argo优选IP域名 <span class="pill">cfip</span></label><input id="cfip" type="text" placeholder="两个优选IP(域名V4[V6])，留空则默认优选域名" disabled></div>
+        <div class="row"><label>Argo订阅优选IP域名 <span class="pill">cfip</span></label><input id="cfip" type="text" placeholder="可选填两个优选IP域名(空格间隔)，留空则默认优选域名" disabled></div>
       </section>
 
       <section class="card shortcut-commands-card">
