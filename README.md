@@ -4,27 +4,26 @@
 
 <img width="757" height="255" alt="d89e2542c513e705106371acc7fa1d33" src="https://github.com/user-attachments/assets/7d7a4678-4223-478c-afe2-d303ba0f85a4" />
 
-
-### 【Argosbx当前版本：V25.11.20】
-
 ---------------------------------------
 
 #### 1、基于Sing-box + Xray + Cloudflared-Argo 三内核自动分配
 
-#### 2、支持Linux类主流VPS系统（建议最新版系统），SSH脚本支持非root环境运行，几乎无需依赖，无脑一次回车搞定
+#### 2、支持Linux类主流VPS系统（建议最新版系统），SSH脚本支持非root环境运行，无脑一次回车搞定
 
 #### 3、支持各种容器系统，Docker镜像部署，公开镜像库：```ygkkk/argosbx```
 
 #### 4、根据Sing-box与Xray不同内核，可选15种WARP出站组合，更换落地IP为WARP的IP，解锁流媒体
 
-#### 5、所有代理协议都无需域名（除了argo固定隧道、IP端口CDN），支持单个或多个代理协议任意组合并快速重置更换
+#### 5、客户端支持方面，各类单协议分享、clash/mihomo/singbox聚合订阅分享都可支持
+
+#### 6、所有代理协议都无需域名（除了argo固定隧道、IP端口CDN），支持单个或多个代理协议任意组合并快速重置更换
 【 已支持：AnyTLS、Any-reality、Vless-xhttp-reality-vison-enc、Vless-tcp-reality-vision、Vless-xhttp-vison-enc、Vless-ws-vision-enc、Shadowsocks-2022、Vmess-ws、Socks5、Hysteria2、Tuic、Argo临时/固定隧道支持Vless-ws-vision-enc或Vmess-ws 】
 
-#### 6、建议配合SSH一键脚本命令生成器网页使用：https://yonggekkk.github.io/argosbx/
+#### 7、建议配合SSH一键脚本命令生成器网页使用：https://yonggekkk.github.io/argosbx/
 
-#### 7、如需要多样的功能，推荐使用VPS专用四合一脚本[Sing-box-yg](https://github.com/yonggekkk/sing-box-yg)
+#### 8、如需要多样的功能，推荐使用VPS专用五合一脚本[Sing-box-yg](https://github.com/yonggekkk/sing-box-yg)
 
-#### 8、Argosbx客户端推荐：
+#### 9、Argosbx客户端推荐：
 
 安卓手机客户端：[Nekobox-starifly版(全协议支持)](https://github.com/starifly/NekoBoxForAndroid/releases)、[V2rayNG官方版](https://github.com/2dust/v2rayNG/releases)
 
@@ -58,9 +57,13 @@
 | 18、vmess-ws、vless-xhttp/ws-enc在客户端的host地址 | cdnym | CF解析IP的域名 | vmess-ws、vless-xhttp/ws-enc为直连 | vmess-ws、vless-xhttp/ws-enc为直连 | 可选，使用80系CDN或者回源CDN时可设置，否则客户端host地址需手动更改为CF解析IP的域名|
 | 19、切换ipv4或ipv6配置 | ippz | 填写4或者6 | 自动识别IP配置 | 自动识别IP配置 | 可选，4表示IPV4配置输出，6表示IPV6配置输出 |
 | 20、添加所有节点名称前缀 | name | 任意字符 | 默认协议名前缀 | 默认协议名前缀 | 可选 |
-| 21、当前系统开放所有端口 | oap | 填写y | 禁止开放所有端口 | 禁止开放所有端口 | 可选，开启运行一次即可，后续删除变量，没必要每次运行 |
-| 22、【仅容器类docker】监听端口，网页查询 | PORT | 端口指定 | 3000 | 3000 | 可选 |
-| 23、【仅容器类docker】启用vless-ws-tls | DOMAIN | 服务器域名 | 关闭vless-ws-tls | 关闭vless-ws-tls | 可选，vless-ws-tls可独立存在，uuid变量必须启用 |
+| 21、开启IP订阅链接 | sub | 填写y | 关闭IP订阅链接 | 关闭IP订阅链接 | 可选 |
+| 22、IP订阅链接密码 | subid | 任意字符 | uuid | uuid | 可选 |
+| 23、IP订阅链接端口 | subpt | 端口指定 | 随机端口 | 随机端口 | 可选 |
+| 24、argo优选IP域名 | cfip | 填写IPV4或者[IPV6]或者域名 | 默认优选域名 | 默认优选域名 | 可选，IP域名之间留空格，仅限填写两个 |
+| 25、hysteria2端口跳跃 | hyjpt | 范围端口或者单端口或者一起混用 | 关闭端口跳跃 | 关闭端口跳跃 | 可选，范围端口格式为小数字:大数字，每组端口之间留空格 |
+| 26、【仅容器类docker】监听端口，网页查询 | PORT | 端口指定 | 3000 | 3000 | 可选 |
+| 27、【仅容器类docker】启用vless-ws-tls | DOMAIN | 服务器域名 | 关闭vless-ws-tls | 关闭vless-ws-tls | 可选，vless-ws-tls可独立存在，uuid变量必须启用 |
 
 ------------------------------------------------------------------
 
@@ -91,8 +94,6 @@
 * 如报错curl not found 可换用主脚本wget：```bash <(wget -qO- https://raw.githubusercontent.com/yonggekkk/argosbx/main/argosbx.sh)```
 
 * 必选其一的协议端口变量：```vwpt=""```、```vmpt=""```、```vmpt="" argo="vmpt"```、```vwpt="" argo="vwpt"```、```vlpt=""```、```xhpt=""```、```anpt=""```、```arpt=""```、```hypt=""```、```tupt=""```、```sspt=""```、```vxpt=""```、```sopt=""```
-
-* 可选的功能类变量：```warp=""```、```uuid=""```、```reym=""```、```cdnym=""```、```argo=""```、```agn=""```、```agk=""```、```ippz=""```、```name=""```、```oap=""```
 
 请参考```一、自定义变量参数说明```中变量的作用说明，变量值填写在```" "```之间，变量之间空一格，不用的变量可以删除
 
@@ -236,6 +237,8 @@ vwpt="80系端口、指定回源端口" cdnym="CF解析IP的域名" bash <(curl 
 ----------------------------------------------------------
 
 #### 相关教程可参考[甬哥博客](https://ygkkk.blogspot.com/2025/08/argosb.html)，视频教程如下：
+
+[小白一分钟快速自建翻墙VPN代理：一键生成SSH命令；解决IP限制、IP质量太差问题；Argo固定隧道设置要点](https://youtu.be/xHzZFP_ywLs)
 
 [🥇搭建代理9大问题排行榜：第4名全网99%的人被误导！第1名每个人都被折腾到爆！](https://youtu.be/pJwJBqBkcfw)
 
