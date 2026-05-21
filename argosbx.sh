@@ -1206,7 +1206,7 @@ case "$server_ip" in
 esac
 echo
 ym_vl_re=$(cat "$HOME/agsbx/ym_vl_re" 2>/dev/null)
-cfip() { echo $((RANDOM % 13 + 1)); }
+cfipsj() { echo $((RANDOM % 13 + 1)); }
 if [ -e "$HOME/agsbx/xray" ]; then
 private_key_x=$(cat "$HOME/agsbx/xrk/private_key" 2>/dev/null)
 public_key_x=$(cat "$HOME/agsbx/xrk/public_key" 2>/dev/null)
@@ -1237,7 +1237,7 @@ echo
 if [ -f "$HOME/agsbx/cdnym" ]; then
 echo "💣【 Vless-xhttp-ecn-cdn 】支持ENC加密，节点信息如下："
 echo "注：默认地址 yg数字.ygkkk.dpdns.org 可自行更换优选IP域名，如是回源端口需手动修改443或者80系端口"
-vl_vx_cdn_link="vless://$uuid@yg$(cfip).ygkkk.dpdns.org:$port_vx?encryption=$enkey&flow=xtls-rprx-vision&type=xhttp&host=$xvvmcdnym&path=$uuid-vx&mode=auto#${sxname}vl-xhttp-enc-cdn-$hostname"
+vl_vx_cdn_link="vless://$uuid@yg$(cfipsj).ygkkk.dpdns.org:$port_vx?encryption=$enkey&flow=xtls-rprx-vision&type=xhttp&host=$xvvmcdnym&path=$uuid-vx&mode=auto#${sxname}vl-xhttp-enc-cdn-$hostname"
 echo "$vl_vx_cdn_link" >> "$HOME/agsbx/jhsub.txt"
 echo "$vl_vx_cdn_link"
 echo
@@ -1253,7 +1253,7 @@ echo
 if [ -f "$HOME/agsbx/cdnym" ]; then
 echo "💣【 Vless-ws-enc-cdn 】支持ENC加密，节点信息如下："
 echo "注：默认地址 yg数字.ygkkk.dpdns.org 可自行更换优选IP域名，如是回源端口需手动修改443或者80系端口"
-vl_vw_cdn_link="vless://$uuid@yg$(cfip).ygkkk.dpdns.org:$port_vw?encryption=$enkey&flow=xtls-rprx-vision&type=ws&host=$xvvmcdnym&path=$uuid-vw#${sxname}vl-ws-enc-cdn-$hostname"
+vl_vw_cdn_link="vless://$uuid@yg$(cfipsj).ygkkk.dpdns.org:$port_vw?encryption=$enkey&flow=xtls-rprx-vision&type=ws&host=$xvvmcdnym&path=$uuid-vw#${sxname}vl-ws-enc-cdn-$hostname"
 echo "$vl_vw_cdn_link" >> "$HOME/agsbx/jhsub.txt"
 echo "$vl_vw_cdn_link"
 echo
@@ -1425,7 +1425,7 @@ echo "- ${sxname}vmess-ws-$hostname"
 if [ -f "$HOME/agsbx/cdnym" ]; then
 echo "💣【 Vmess-ws-cdn 】节点信息如下："
 echo "注：默认地址 yg数字.ygkkk.dpdns.org 可自行更换优选IP域名，如是回源端口需手动修改443或者80系端口"
-vm_cdn_link="vmess://$(echo "{ \"v\": \"2\", \"ps\": \"${sxname}vm-ws-cdn-$hostname\", \"add\": \"yg$(cfip).ygkkk.dpdns.org\", \"port\": \"$port_vm_ws\", \"id\": \"$uuid\", \"aid\": \"0\", \"scy\": \"auto\", \"net\": \"ws\", \"type\": \"none\", \"host\": \"$xvvmcdnym\", \"path\": \"/$uuid-vm\", \"tls\": \"\"}" | base64 -w0)"
+vm_cdn_link="vmess://$(echo "{ \"v\": \"2\", \"ps\": \"${sxname}vm-ws-cdn-$hostname\", \"add\": \"yg$(cfipsj).ygkkk.dpdns.org\", \"port\": \"$port_vm_ws\", \"id\": \"$uuid\", \"aid\": \"0\", \"scy\": \"auto\", \"net\": \"ws\", \"type\": \"none\", \"host\": \"$xvvmcdnym\", \"path\": \"/$uuid-vm\", \"tls\": \"\"}" | base64 -w0)"
 echo "$vm_cdn_link" >> "$HOME/agsbx/jhsub.txt"
 echo "$vm_cdn_link"
 echo
