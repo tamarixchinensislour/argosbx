@@ -387,7 +387,7 @@
           </svg>
         </label>
       </div>
-      <h1>ArgoSBX小钢炮脚本💣一键SSH命令生成器 V26.5.10</h1>
+      <h1>ArgoSBX小钢炮脚本💣一键SSH命令生成器 V26.5.26</h1>
       <p>
         甬哥Github项目：
         <a href="https://github.com/yonggekkk" target="_blank">github.com/yonggekkk</a><br>
@@ -529,7 +529,7 @@
 
       <section class="card out">
         <div class="tabs">
-          <h2>进入服务器的SSH界面，复制下方生成的一键脚本命令，回车一次搞定</h2>
+          <h2>复制下方命令到服务器SSH回车一次即可。建议保存该命令，后续可粘贴回这里直接修改配置。</h2>
         </div>
         <div class="command-type-row">
             <label>命令类型选择：</label>
@@ -594,6 +594,8 @@
   const themeSwitchCheckbox = document.getElementById('theme-switch-checkbox');
   const commandTypeRadios = document.querySelectorAll('input[name="commandType"]');
 
+  let isUpdatingFromOutput = false;
+
   function initTheme() {
     const isLightMode = localStorage.getItem('theme') === 'light';
     if (isLightMode) {
@@ -654,17 +656,14 @@
   }
 
   function updateDynamicInputs() {
-      // CDN 域名逻辑
       const isCdnEnabled = vmessWsCheckbox.checked || vlessXhttpCheckbox.checked || vlessWsVCheckbox.checked;
       cdnymInput.disabled = !isCdnEnabled;
       if (!isCdnEnabled) cdnymInput.value = '';
 
-      // Reality 域名逻辑
       const isRealityEnabled = vlessTcpRealityCheckbox.checked || vlessXhttpRealityCheckbox.checked || anyRealityCheckbox.checked;
       reymInput.disabled = !isRealityEnabled;
       if (!isRealityEnabled) reymInput.value = '';
 
-      // Hysteria2 端口跳跃逻辑
       const isHy2Enabled = hy2Checkbox.checked;
       hyjptInput.disabled = !isHy2Enabled;
       if (!isHy2Enabled) hyjptInput.value = '';
@@ -692,10 +691,8 @@
     render();
   });
 
-  // 监听所有可能影响动态输入的复选框
   [vmessWsCheckbox, vlessWsVCheckbox, vlessXhttpCheckbox, vlessTcpRealityCheckbox, vlessXhttpRealityCheckbox, anyRealityCheckbox, hy2Checkbox].forEach(ck => {
     ck.addEventListener('change', () => {
-      // 特殊逻辑：Argo 联动
       if (!vlessWsVCheckbox.checked && argoSelect.value === 'vwpt') { 
          argoSelect.value = '';
          updateArgoState('');
@@ -798,11 +795,82 @@
   }
 
   function render(){
+    if (isUpdatingFromOutput) return; 
     const m = collectVars();
     const vars = toBashVars(m);
     const selectedCommand = document.querySelector('input[name="commandType"]:checked').value === 'curl' ? CURL : WGET;
     output.value = (vars ? vars + ' ' : '') + selectedCommand;
   }
+
+  function parseAndFillOutput() {
+    const text = output.value.trim();
+    if (!text) return;
+
+    isUpdatingFromOutput = true;
+
+    if (text.includes('wget')) {
+      document.querySelector('input[name="commandType"][value="wget"]').checked = true;
+    } else {
+      document.querySelector('input[name="commandType"][value="curl"]').checked = true;
+    }
+
+    const regex = /(\w+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"']+))/g;
+    const params = {};
+    let match;
+    while ((match = regex.exec(text)) !== null) {
+      const key = match[1];
+      const val = match[2] !== undefined ? match[2] : (match[3] !== undefined ? match[3] : match[4]);
+      params[key] = val;
+    }
+
+    protoKeys.forEach(k => {
+      const ck = document.querySelector(`[data-proto="${k}"]`);
+      const pt = document.querySelector(`[data-port="${k}"]`);
+      if (k in params) {
+        if (ck) ck.checked = true;
+        if (pt) pt.value = params[k];
+      } else {
+        if (ck) ck.checked = false;
+        if (pt) pt.value = '';
+      }
+    });
+
+    if ('sub' in params) {
+      sub.value = params['sub'];
+    } else {
+      sub.value = '';
+    }
+    [subid, subpt].forEach(i => i.disabled = (sub.value !== 'y'));
+
+    if ('argo' in params) {
+      argoSelect.value = params['argo'];
+    } else {
+      argoSelect.value = '';
+    }
+    [agn, agk, cfip].forEach(i => i.disabled = (argoSelect.value === ''));
+
+    const isCdnEnabled = params['vmpt'] !== undefined || params['vxpt'] !== undefined || params['vwpt'] !== undefined;
+    cdnymInput.disabled = !isCdnEnabled;
+    const isRealityEnabled = params['vlpt'] !== undefined || params['xhpt'] !== undefined || params['arpt'] !== undefined;
+    reymInput.disabled = !isRealityEnabled;
+    hyjptInput.disabled = (params['hypt'] === undefined);
+
+    const allIds = [...optIds, 'agn', 'agk', 'cfip'];
+    allIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        if (id in params) {
+          el.value = params[id];
+        } else {
+          el.value = '';
+        }
+      }
+    });
+
+    isUpdatingFromOutput = false;
+  }
+
+  output.addEventListener('input', parseAndFillOutput);
 
   initTheme();
   updateDynamicInputs();
@@ -846,7 +914,12 @@
     try { await navigator.clipboard.writeText(t.value); showToast('已复制到剪贴板'); } catch (e) { document.execCommand('copy'); showToast('已复制'); }
   });
 
-  document.getElementById('reset').addEventListener('click', () => { location.reload(); });
+  // 修改此处的重置按钮逻辑：彻底清空表单组件，同时彻底清空脚本输出栏
+  document.getElementById('reset').addEventListener('click', () => { 
+    resetForm(false); 
+    output.value = ''; 
+    showToast('已清空全部配置');
+  });
 
   function showToast(msg) {
     const d = document.createElement('div');
