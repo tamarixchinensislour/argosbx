@@ -1518,6 +1518,9 @@ echo "\"${sxname}any-reality-$hostname\","
 }
 fi
 if grep hy2-sb "$HOME/agsbx/sb.json" >/dev/null 2>&1; then
+SHA256=$(openssl x509 -fingerprint -noout -sha256 -in "$HOME/agsbx/cert.pem" 2>/dev/null | awk -F= '{print $NF}' | sed 's/:/%3A/g')
+echo "$SHA256" > "$HOME/agsbx/SHA256.txt"
+SHA256=$(cat "$HOME/agsbx/SHA256.txt")
 echo "💣【 Hysteria2 】节点信息如下："
 port_hy2=$(cat "$HOME/agsbx/port_hy2")
 hy2_ports=$(iptables -t nat -nL --line 2>/dev/null | grep -w "$port_hy2" | awk '{print $8}' | sed 's/dpts://; s/dpt://' | tr '\n' ',' | sed 's/,$//')
@@ -1534,7 +1537,8 @@ EOF
 else
 hyps=
 fi
-hy2_link="hysteria2://$uuid@$server_ip:$port_hy2?security=tls&alpn=h3&insecure=1&allowInsecure=1$hyps&sni=www.bing.com#${sxname}hy2-$hostname"
+#hy2_link="hysteria2://$uuid@$server_ip:$port_hy2?security=tls&alpn=h3&insecure=1&allowInsecure=1$hyps&sni=www.bing.com#${sxname}hy2-$hostname"
+hy2_link="hysteria2://$uuid@$server_ip:$port_hy2?security=tls&alpn=h3&insecure=0&allowInsecure=0$hyps&sni=www.bing.com&pinSHA256=$SHA256#${sxname}hy2-$hostname"
 echo "$hy2_link" >> "$HOME/agsbx/jhsub.txt"
 echo "$hy2_link"
 echo
