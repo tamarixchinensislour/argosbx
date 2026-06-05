@@ -441,10 +441,10 @@ cat > "$HOME/agsbx/sb.json" <<EOF
 EOF
 insuuid
 command -v openssl >/dev/null 2>&1 && openssl ecparam -genkey -name prime256v1 -out "$HOME/agsbx/private.key" >/dev/null 2>&1
-command -v openssl >/dev/null 2>&1 && openssl req -new -x509 -days 36500 -key "$HOME/agsbx/private.key" -out "$HOME/agsbx/cert.pem" -subj "/CN=www.bing.com" >/dev/null 2>&1
+command -v openssl >/dev/null 2>&1 && openssl req -new -x509 -days 36500 -key "$HOME/agsbx/private.key" -out "$HOME/agsbx/cert.crt" -subj "/CN=www.bing.com" >/dev/null 2>&1
 if [ ! -f "$HOME/agsbx/private.key" ]; then
 url="https://github.com/yonggekkk/argosbx/releases/download/argosbx/private.key"; out="$HOME/agsbx/private.key"; (command -v curl>/dev/null 2>&1 && curl -Ls -o "$out" --retry 2 "$url") || (command -v wget>/dev/null 2>&1 && timeout 3 wget -q -O "$out" --tries=2 "$url")
-url="https://github.com/yonggekkk/argosbx/releases/download/argosbx/cert.pem"; out="$HOME/agsbx/cert.pem"; (command -v curl>/dev/null 2>&1 && curl -Ls -o "$out" --retry 2 "$url") || (command -v wget>/dev/null 2>&1 && timeout 3 wget -q -O "$out" --tries=2 "$url")
+url="https://github.com/yonggekkk/argosbx/releases/download/argosbx/cert.crt"; out="$HOME/agsbx/cert.crt"; (command -v curl>/dev/null 2>&1 && curl -Ls -o "$out" --retry 2 "$url") || (command -v wget>/dev/null 2>&1 && timeout 3 wget -q -O "$out" --tries=2 "$url")
 fi
 if [ -n "$hyp" ]; then
 hyp=hypt
@@ -473,7 +473,7 @@ cat >> "$HOME/agsbx/sb.json" <<EOF
             "alpn": [
                 "h3"
             ],
-            "certificate_path": "$HOME/agsbx/cert.pem",
+            "certificate_path": "$HOME/agsbx/cert.crt",
             "key_path": "$HOME/agsbx/private.key"
         }
     },
@@ -509,7 +509,7 @@ cat >> "$HOME/agsbx/sb.json" <<EOF
                 "alpn": [
                     "h3"
                 ],
-                "certificate_path": "$HOME/agsbx/cert.pem",
+                "certificate_path": "$HOME/agsbx/cert.crt",
                 "key_path": "$HOME/agsbx/private.key"
             }
         },
@@ -541,7 +541,7 @@ cat >> "$HOME/agsbx/sb.json" <<EOF
             "padding_scheme":[],
             "tls":{
                 "enabled": true,
-                "certificate_path": "$HOME/agsbx/cert.pem",
+                "certificate_path": "$HOME/agsbx/cert.crt",
                 "key_path": "$HOME/agsbx/private.key"
             }
         },
@@ -1059,7 +1059,7 @@ mkdir -p "$HOME/bin"
 (command -v curl >/dev/null 2>&1 && curl -sL "$agsbxurl" -o "$SCRIPT_PATH") || (command -v wget >/dev/null 2>&1 && wget -qO "$SCRIPT_PATH" "$agsbxurl")
 chmod +x "$SCRIPT_PATH"
 if ! pidof systemd >/dev/null 2>&1 && ! command -v rc-service >/dev/null 2>&1; then
-echo "if ! find /proc/*/exe -type l 2>/dev/null | grep -E '/proc/[0-9]+/exe' | xargs -r readlink 2>/dev/null | grep -Eq 'agsbx/(s|x)' && ! pgrep -f 'agsbx/(s|x)' >/dev/null 2>&1; then echo '检测到系统可能中断过，或者变量格式错误？建议在SSH对话框输入 reboot 重启下服务器。现在自动执行Argosbx脚本的节点恢复操作，请稍等……'; sleep 6; export hyjpt=\"${hyjpt}\" cdnym=\"${cdnym}\" name=\"${name}\" ippz=\"${ippz}\" argo=\"${argo}\" uuid=\"${uuid}\" $wap=\"${warp}\" $xhp=\"${port_xh}\" $vxp=\"${port_vx}\" $ssp=\"${port_ss}\" $sop=\"${port_so}\" $anp=\"${port_an}\" $arp=\"${port_ar}\" $vlp=\"${port_vl_re}\" $vwp=\"${port_vw}\" $vmp=\"${port_vm_ws}\" $hyp=\"${port_hy2}\" $tup=\"${port_tu}\" reym=\"${ym_vl_re}\" agn=\"${ARGO_DOMAIN}\" agk=\"${ARGO_AUTH}\"; bash "$HOME/bin/agsbx"; fi" >> ~/.bashrc
+echo "if ! find /proc/*/exe -type l 2>/dev/null | grep -E '/proc/[0-9]+/exe' | xargs -r readlink 2>/dev/null | grep -Eq 'agsbx/(s|x)' && ! pgrep -f 'agsbx/(s|x)' >/dev/null 2>&1; then echo '检测到系统可能中断过，或者变量格式错误？建议在SSH对话框输入 reboot 重启下服务器。现在自动执行Argosbx脚本的节点恢复操作，请稍等……'; sleep 6; export cfip=\"${cfip}\" hyjpt=\"${hyjpt}\" cdnym=\"${cdnym}\" name=\"${name}\" ippz=\"${ippz}\" argo=\"${argo}\" uuid=\"${uuid}\" $wap=\"${warp}\" $xhp=\"${port_xh}\" $vxp=\"${port_vx}\" $ssp=\"${port_ss}\" $sop=\"${port_so}\" $anp=\"${port_an}\" $arp=\"${port_ar}\" $vlp=\"${port_vl_re}\" $vwp=\"${port_vw}\" $vmp=\"${port_vm_ws}\" $hyp=\"${port_hy2}\" $tup=\"${port_tu}\" reym=\"${ym_vl_re}\" agn=\"${ARGO_DOMAIN}\" agk=\"${ARGO_AUTH}\"; bash "$HOME/bin/agsbx"; fi" >> ~/.bashrc
 fi
 sed -i '/export PATH="\$HOME\/bin:\$PATH"/d' ~/.bashrc
 echo 'export PATH="$HOME/bin:$PATH"' >> "$HOME/.bashrc"
@@ -1108,9 +1108,16 @@ if [ -n "$cfip" ]; then
 set -- $cfip
 cdnip1="$1"
 cdnip2="$2"
+echo "$cdnip1" > "$HOME/agsbx/cdnip1"
+echo "$cdnip2" > "$HOME/agsbx/cdnip2"
+else
+if [ -f "$HOME/agsbx/cdnip1" ] && [ -f "$HOME/agsbx/cdnip2" ]; then
+cdnip1=$(cat "$HOME/agsbx/cdnip1")
+cdnip2=$(cat "$HOME/agsbx/cdnip2")
 else
 cdnip1="yg1.ygkkk.dpdns.org"
 cdnip2="yg6.ygkkk.dpdns.org"
+fi
 fi
 }
 argosbxstatus(){
@@ -1518,7 +1525,7 @@ echo "\"${sxname}any-reality-$hostname\","
 }
 fi
 if grep hy2-sb "$HOME/agsbx/sb.json" >/dev/null 2>&1; then
-SHA256=$(openssl x509 -fingerprint -noout -sha256 -in "$HOME/agsbx/cert.pem" 2>/dev/null | awk -F= '{print $NF}' | sed 's/:/%3A/g')
+SHA256=$(openssl x509 -fingerprint -noout -sha256 -in "$HOME/agsbx/cert.crt" 2>/dev/null | awk -F= '{print $NF}' | sed 's/:/%3A/g')
 echo "$SHA256" > "$HOME/agsbx/SHA256.txt"
 SHA256=$(cat "$HOME/agsbx/SHA256.txt")
 echo "💣【 Hysteria2 】节点信息如下："
