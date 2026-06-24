@@ -1123,6 +1123,8 @@ cdnip2=$(cat "$HOME/agsbx/cdnip2")
 else
 cdnip1="yg1.ygkkk.dpdns.org"
 cdnip2="yg6.ygkkk.dpdns.org"
+echo "$cdnip1" > "$HOME/agsbx/cdnip1"
+echo "$cdnip2" > "$HOME/agsbx/cdnip2"
 fi
 fi
 }
@@ -1210,6 +1212,8 @@ uuid=$(cat "$HOME/agsbx/uuid")
 server_ip=$(cat "$HOME/agsbx/server_ip.log")
 sxname=$(cat "$HOME/agsbx/name" 2>/dev/null)
 xvvmcdnym=$(cat "$HOME/agsbx/cdnym" 2>/dev/null)
+cdnip1=$(cat "$HOME/agsbx/cdnip1" 2>/dev/null)
+cdnip2=$(cat "$HOME/agsbx/cdnip2" 2>/dev/null)
 echo "*********************************************************"
 echo "*********************************************************"
 echo "Argosbx脚本输出节点配置如下："
