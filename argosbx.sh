@@ -1299,15 +1299,10 @@ cdnip2="$2"
 echo "$cdnip1" > "$HOME/agsbx/cdnip1"
 echo "$cdnip2" > "$HOME/agsbx/cdnip2"
 else
-if [ -s "$HOME/agsbx/cdnip1" ] && [ -s "$HOME/agsbx/cdnip2" ]; then
-cdnip1=$(cat "$HOME/agsbx/cdnip1")
-cdnip2=$(cat "$HOME/agsbx/cdnip2")
-else
 cdnip1="www.shopify.com"
 cdnip2="www.wto.org"
 echo "$cdnip1" > "$HOME/agsbx/cdnip1"
 echo "$cdnip2" > "$HOME/agsbx/cdnip2"
-fi
 fi
 }
 argosbxstatus(){
