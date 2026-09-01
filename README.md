@@ -29,7 +29,7 @@
 
 电脑win客户端：[V2rayN官方版(全协议支持)](https://github.com/2dust/v2rayN/releases)、[Singbox官方版](https://github.com/SagerNet/sing-box/releases)、Clash/Mihomo客户端随意
 
-苹果IOS客户端：小火箭Shadowrocket、Onexray、Clash mi
+苹果IOS客户端：小火箭Shadowrocket、Onexray、Sing-bos MT、Clash mi
 
 注：个别协议仅支持某些客户端
 
