@@ -1727,7 +1727,6 @@ cat <<EOF
                     "fingerprint": "chrome"
                 }
             },
-            "packet_encoding": "packetaddr",
             "transport": {
                 "headers": {
                     "Host": [
@@ -2101,7 +2100,6 @@ cat <<EOF
                     "fingerprint": "chrome"
                 }
             },
-            "packet_encoding": "packetaddr",
             "transport": {
                 "headers": {
                     "Host": [
@@ -2128,7 +2126,6 @@ cat <<EOF
                     "fingerprint": "chrome"
                 }
             },
-            "packet_encoding": "packetaddr",
             "transport": {
                 "headers": {
                     "Host": [
