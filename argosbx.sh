@@ -86,7 +86,8 @@ apk update >/dev/null 2>&1 && apk add --no-cache bash busybox-extras gcompat lib
 elif command -v apt >/dev/null 2>&1; then
 export DEBIAN_FRONTEND=noninteractive
 printf 'iptables-persistent iptables-persistent/autosave_v4 boolean true\niptables-persistent iptables-persistent/autosave_v6 boolean true\n' | debconf-set-selections
-apt update >/dev/null 2>&1 && apt install -y busybox coreutils util-linux iptables iptables-persistent cron openssl >/dev/null 2>&1
+apt update >/dev/null 2>&1 && apt install -y busybox coreutils util-linux iptables iptables-persistent cron openssl systemd-resolved >/dev/null 2>&1
+systemctl enable --now systemd-resolved >/dev/null 2>&1
 fi
 touch sbx_update
 fi
