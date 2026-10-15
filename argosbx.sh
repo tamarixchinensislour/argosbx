@@ -2291,7 +2291,6 @@ cat > $HOME/agsbx/sbox.json <<EOF
       ],
       "auto_route": true,
       "strict_route": true,
-      "stack": "gvisor",
       "mtu": 1420
     }
   ],
