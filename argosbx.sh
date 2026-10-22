@@ -1,5 +1,19 @@
 #!/bin/bash
 export LANG=en_US.UTF-8
+mkdir -p "$HOME/agsbx"
+url='https://raw.githubusercontent.com/yonggekkk/argosbx/main/argosbx.sh'
+case "${*##* }" in list|del|upx|ups|res) ;; *)
+base=$( { tr '\0' '\n' < /proc/$PPID/environ; env -i HOME="$HOME" bash -lic env 2>/dev/null; } | sort -u )
+cmd=""
+while IFS= read -r l; do
+grep -qxF -- "$l" <<< "$base" && continue
+case "$l" in _=*|SHLVL=*|PWD=*|OLDPWD=*|PATH=*|clashdir=*|XDG_DATA_DIRS=*) continue ;; esac
+cmd+="${l%%=*}=\"${l#*=}\" "
+done < <(tr '\0' '\n' < /proc/$$/environ)
+main="bash <(curl -Ls $url)"
+cmd+="$main${*:+ $*}"
+[ "$cmd" != "$main" ] && echo "$cmd" > "$HOME/agsbx/sh.txt"
+;; esac
 [ -z "${vlpt+x}" ] || vlp=yes
 [ -z "${vmpt+x}" ] || { vmp=yes; vmag=yes; }
 [ -z "${vwpt+x}" ] || { vwp=yes; vmag=yes; }
@@ -49,6 +63,7 @@ export oap=${oap:-''}
 v46url="https://icanhazip.com"
 agsbxurl="https://raw.githubusercontent.com/yonggekkk/argosbx/main/argosbx.sh"
 showmode(){
+[ -s "$HOME/agsbx/sh.txt" ] && echo "上次输入的完整脚本：$(cat "$HOME/agsbx/sh.txt")"
 echo "Argosbx脚本一键SSH命令生器在线网址：https://yonggekkk.github.io/argosbx/"
 echo "主脚本：bash <(curl -Ls https://raw.githubusercontent.com/yonggekkk/argosbx/main/argosbx.sh) 或 bash <(wget -qO- https://raw.githubusercontent.com/yonggekkk/argosbx/main/argosbx.sh)"
 echo "显示节点信息命令：agsbx list 【或者】 主脚本 list"
