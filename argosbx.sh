@@ -3,13 +3,10 @@ export LANG=en_US.UTF-8
 mkdir -p "$HOME/agsbx"
 url='https://raw.githubusercontent.com/yonggekkk/argosbx/main/argosbx.sh'
 case "${*##* }" in list|del|upx|ups|upa|res) ;; *)
-base=$( { tr '\0' '\n' < /proc/$PPID/environ; env -i HOME="$HOME" bash -lic env 2>/dev/null; } | sort -u )
 cmd=""
-while IFS= read -r l; do
-grep -qxF -- "$l" <<< "$base" && continue
-case "$l" in _=*|SHLVL=*|PWD=*|OLDPWD=*|PATH=*|clashdir=*|XDG_DATA_DIRS=*) continue ;; esac
-cmd+="${l%%=*}=\"${l#*=}\" "
-done < <(tr '\0' '\n' < /proc/$$/environ)
+for v in uuid vlpt vmpt vwpt hypt tupt xhpt vxpt anpt arpt sspt sopt nvpt xupt xcpt reym cdnym argo agn agk warp name oap; do
+[ -n "${!v+x}" ] && cmd+="$v=\"${!v}\" "
+done
 main="bash <(curl -Ls $url)"
 cmd+="$main${*:+ $*}"
 [ "$cmd" != "$main" ] && echo "$cmd" > "$HOME/agsbx/sh.txt"
